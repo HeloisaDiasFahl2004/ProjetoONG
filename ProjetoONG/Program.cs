@@ -121,7 +121,7 @@ namespace ProjetoONG
 
                 }
             } while (opc != 0);
-        } //OK
+        } // 5 opções  -> sair/cadastrar/editar/deletar/exibir
         static void MenuAdotado()
         {
             int opc;
@@ -158,13 +158,14 @@ namespace ProjetoONG
                         int opcao = int.Parse(Console.ReadLine());
                         if (opcao == 1) bd.VisualizarAdotados(adotado);
                         else if (opcao == 2) bd.BuscarAdotado(adotado);
+                        else Console.WriteLine("Opção inválida!");
                         break;
                     default:
                         Console.WriteLine("Opção inválida!");
                         break;
                 }
             } while (opc != 0);
-        }
+        } // 5 opções  -> sair/cadastrar/editar/deletar/exibir
         static void MenuAdocao()
         {
             int opc;
@@ -188,14 +189,14 @@ namespace ProjetoONG
                         bd.InserirAdocao(adocao); //INSERT
                         break;
                     case 2:
-                        bd.VisualizarAdocao(); //SELECT
+                        bd.VisualizarAdocao(); //SELECT 
                         break;
                     default:
                         Console.WriteLine("Opção inválida!");
                         break;
                 }
             } while (opc != 0);
-        }
+        } // 3 opções -> sair/cadastrar adoção/ exibir adoções
 
         static void Main(string[] args)
         {

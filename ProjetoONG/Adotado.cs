@@ -42,7 +42,7 @@ namespace ProjetoONG
             this.Nome = Console.ReadLine();
 
 ;
-        }
+        } // cadastrar adotado
        
     }
 }

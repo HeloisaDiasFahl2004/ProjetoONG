@@ -28,9 +28,7 @@ namespace ProjetoONG
             CHIP = int.Parse(Console.ReadLine());
 
             DataAdocao = DateTime.Now;
-        }
-       
-       
+        } //cadastrar adotante e adotado 
 
     }
 }

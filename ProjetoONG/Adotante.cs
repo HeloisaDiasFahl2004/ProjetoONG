@@ -50,6 +50,6 @@ namespace ProjetoONG
             this.Telefone = Console.ReadLine();
 
           
-        }
+        } //cadastro adotante
     }
 }

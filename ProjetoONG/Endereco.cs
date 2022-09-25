@@ -51,6 +51,6 @@ namespace ProjetoONG
 
             Endereco e = new Endereco(l, cep, comp, num, b, c, est);
             return e;
-        }
+        } //cadastro endereço do adotante
     }
 }
