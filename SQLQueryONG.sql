@@ -8,7 +8,7 @@ CREATE TABLE Adotante(
 	CPF varchar(11) NOT NULL,
 	Sexo char(1)  NOT NULL,
 	DataNascimento date Not NULL,
-	--EnderecoCompleto varchar(70) NOT NULL,
+	
 	Telefone varchar (11) NOT NULL
 
 	CONSTRAINT PK_CPF_Adotante PRIMARY KEY (CPF)
@@ -46,7 +46,7 @@ CREATE TABLE Endereco(
 	FOREIGN KEY (CPF) REFERENCES Adotante(CPF)
 );
 
---ver se est· tudo ok nas tabelas
+--ver se est√° tudo ok nas tabelas
 Select * from adotado;
 select * from adotante;
 select * from Adocao;
