@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -10,6 +11,7 @@ namespace ProjetoONG
 {
     internal class Adotado
     {
+        public int CHIP { get; set; }
         public string Familia { get; set; }
         public string Raca { get; set; }
         public char Sexo { get; set; }
@@ -46,6 +48,16 @@ namespace ProjetoONG
 
             Adotado adotado = new Adotado(f,r,s,n);
             return adotado;
+        }
+        public void InserirAdotado(Adotado adotado)
+        {
+            BD bd = new BD();
+            SqlConnection conexaosql = new SqlConnection(bd.Caminho());
+            conexaosql.Open();
+            string sql = $"INSERT INTO Adotado(Familia,Raca,Sexo,Nome) VALUES('{adotado.Familia}', " + $"'{adotado.Raca}','{adotado.Sexo}','{adotado.Nome}');";
+            SqlCommand cmdINSERTadotado = new SqlCommand(sql, conexaosql);
+            cmdINSERTadotado.ExecuteNonQuery();
+            conexaosql.Close();
         }
     }
 }

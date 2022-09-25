@@ -14,9 +14,9 @@ namespace ProjetoONG
         public int Numero { get; set; }
         public string Bairro { get; set; }
         public string Cidade { get; set; }
-        public char Estado { get; set; }
+        public string Estado { get; set; }
 
-        public Endereco(string l,string cep,string comp, int num, string b, string c,char est)
+        public Endereco(string l,string cep,string comp, int num, string b, string c,string est)
         {
             this.Logradouro = l;
             this.CEP = cep;  
@@ -51,11 +51,10 @@ namespace ProjetoONG
             string c = Console.ReadLine();
 
             Console.Write("Estado: ");
-            char est = char.Parse(Console.ReadLine());
+            string est =Console.ReadLine();
 
             Endereco e = new Endereco(l,cep,comp,num,b,c,est);
             return e;
         }
-       
     }
 }
