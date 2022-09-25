@@ -100,7 +100,7 @@ namespace ProjetoONG
                         break;
 
                     case 3:
-
+                        bd.DeletarAdotante();
                         break;
 
                     case 4:

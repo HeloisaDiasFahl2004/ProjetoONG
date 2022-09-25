@@ -54,12 +54,13 @@ namespace ProjetoONG
                 {
                     Console.Write("{0}\t", sqlReader.GetString(0));
                     Console.Write("{0}\t", sqlReader.GetString(1));
-                    Console.Write("{0}\t", sqlReader.GetChar(2));
+                    Console.Write("{0}\t", sqlReader.GetString(2));
                     Console.Write("{0}\t", sqlReader.GetDateTime(3));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(4));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(5));
+                    Console.Write("{0}\t", sqlReader.GetString(4));
+                    Console.Write("{0}\t", sqlReader.GetString(5));
                 }
             }
+            Console.ReadKey();
         } // seleciono todos os adotantes
         public Adotante BuscarAdotante(Adotante adotante)
         {
@@ -70,6 +71,7 @@ namespace ProjetoONG
             Console.Write("Informe o CPF que deseja buscar: ");
             string cpf = Console.ReadLine();
             cmdSELECTadotante.CommandText = "SELECT Nome,CPF,Sexo,DataNascimento,EnderecoCompleto,Telefone FROM Adotante WHERE cpf=@CPF";
+            cmdSELECTadotante.Parameters.AddWithValue("CPF", cpf);
             cmdSELECTadotante.Connection = conexaosql;
             using (SqlDataReader sqlReader = cmdSELECTadotante.ExecuteReader())
             {
@@ -77,12 +79,13 @@ namespace ProjetoONG
                 {
                     Console.Write("{0}\t", sqlReader.GetString(0));
                     Console.Write("{0}\t", sqlReader.GetString(1));
-                    Console.Write("{0}\t", sqlReader.GetChar(2));
+                    Console.Write("{0}\t", sqlReader.GetString(2));
                     Console.Write("{0}\t", sqlReader.GetDateTime(3));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(4));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(5));
+                    Console.Write("{0}\t", sqlReader.GetString(4));
+                    Console.Write("{0}\t", sqlReader.GetString(5));
                 }
             }
+            Console.ReadLine();
             return adotante;
         } // seleciono 1 adotante específico
         public void AtualizarCampoAdotante()
@@ -239,9 +242,9 @@ namespace ProjetoONG
             SqlConnection conexaosql = new SqlConnection(bd.Caminho());
             conexaosql.Open();
             Console.Write("Informe o CPF que deseja excluir: ");
-            int cpf = int.Parse(Console.ReadLine());
+            string cpf = Console.ReadLine();
             SqlCommand cmdDELETE = new SqlCommand();
-            cmdDELETE.CommandText = "DELETE FROM Contatos WHERE cpf=@CPF;";
+            cmdDELETE.CommandText = "DELETE FROM Adotante WHERE cpf=@CPF;";
             cmdDELETE.Parameters.AddWithValue("@CPF", cpf);
             cmdDELETE.Connection = conexaosql;
             cmdDELETE.ExecuteNonQuery();
