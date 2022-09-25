@@ -1,15 +1,14 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Data.SqlClient;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProjetoONG
 {
     internal class Program
     {
-       static Adotante adotante = new Adotante();
-       static Adotado adotado = new Adotado();
+        static Adotante adotante = new Adotante();
+        static Adotado adotado = new Adotado();
+        static BD bd = new BD();
+
         static void Menu()
         {
             int opc;
@@ -84,6 +83,7 @@ namespace ProjetoONG
                 Console.WriteLine("\t 4-Exibir Adotante");
                 Console.Write("\t Escolha uma opção: ");
                 opc = int.Parse(Console.ReadLine());
+
                 switch (opc)
                 {
                     case 0:
@@ -92,12 +92,11 @@ namespace ProjetoONG
                     case 1:
                         Adotante adotante = new Adotante();//crio o objeto
                         adotante.CadastrarAdotante();//cadastro esse objeto
-                        adotante.InserirAdotante(adotante);//insero esse objeto no banco de dados
+                        bd.InserirAdotante(adotante);//insero esse objeto no banco de dados
                         break;
 
                     case 2:
-                        adotante = new Adotante();
-                        adotante.AtualizarCampoAdotante();
+                        bd.AtualizarCampoAdotante();
                         break;
 
                     case 3:
@@ -109,9 +108,9 @@ namespace ProjetoONG
                         Console.WriteLine("Deseja: 1-Visualizar TODOS os adotantes 2- UM adotante em específico");
                         int resp = int.Parse(Console.ReadLine());
 
-                        if (resp == 1) adotante.VisualizarAdotantes(adotante);
+                        if (resp == 1) bd.VisualizarAdotantes(adotante);
 
-                        else if (resp == 2) adotante.BuscarAdotante(adotante);
+                        else if (resp == 2) bd.BuscarAdotante(adotante);
 
                         else Console.WriteLine("Opção Inválida!");
                         break;
@@ -145,7 +144,20 @@ namespace ProjetoONG
                     case 1:
                         Adotado adotado = new Adotado();
                         adotado.CadastrarAdotado();
-                        adotado.InserirAdotado(adotado);
+                        bd.InserirAdotado(adotado);
+                        break;
+                    case 2:
+                        bd.AtualizarCampoAdotado();
+                        break;
+                    case 3:
+                        bd.DeletarAdotado();
+                        break;
+                    case 4:
+                        adotado = new Adotado();
+                        Console.WriteLine("Deseja exibir: 1-Todos os Adotados  2-Um Adotado em específico");
+                        int opcao = int.Parse(Console.ReadLine());
+                        if (opcao == 1) bd.VisualizarAdotados(adotado);
+                        else if (opcao == 2) bd.BuscarAdotado(adotado);
                         break;
                     default:
                         Console.WriteLine("Opção inválida!");
@@ -173,11 +185,10 @@ namespace ProjetoONG
                     case 1:
                         Adocao adocao = new Adocao();
                         adocao.CadastrarAdocao();
-                        adocao.InserirAdocao(adocao);
+                        bd.InserirAdocao(adocao); //INSERT
                         break;
                     case 2:
-                        adocao = new Adocao();
-                        adocao.VisualizarAdocao(); //SELECT
+                        bd.VisualizarAdocao(); //SELECT
                         break;
                     default:
                         Console.WriteLine("Opção inválida!");
@@ -185,7 +196,7 @@ namespace ProjetoONG
                 }
             } while (opc != 0);
         }
-       
+
         static void Main(string[] args)
         {
             Menu();

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProjetoONG
 {
@@ -15,15 +10,15 @@ namespace ProjetoONG
         public string Familia { get; set; }
         public string Raca { get; set; }
         public char Sexo { get; set; }
-        public string Nome{ get; set; }
+        public string Nome { get; set; }
 
         public Adotado()
         {
 
         }
-        public Adotado( string f, string r, char s, string n)
+        public Adotado(string f, string r, char s, string n)
         {
-          
+
             this.Familia = f;
             this.Raca = r;
             this.Sexo = s;
@@ -46,18 +41,9 @@ namespace ProjetoONG
             Console.Write("Nome: ");
             string n = Console.ReadLine();
 
-            Adotado adotado = new Adotado(f,r,s,n);
+            Adotado adotado = new Adotado(f, r, s, n);
             return adotado;
         }
-        public void InserirAdotado(Adotado adotado)
-        {
-            BD bd = new BD();
-            SqlConnection conexaosql = new SqlConnection(bd.Caminho());
-            conexaosql.Open();
-            string sql = $"INSERT INTO Adotado(Familia,Raca,Sexo,Nome) VALUES('{adotado.Familia}', " + $"'{adotado.Raca}','{adotado.Sexo}','{adotado.Nome}');";
-            SqlCommand cmdINSERTadotado = new SqlCommand(sql, conexaosql);
-            cmdINSERTadotado.ExecuteNonQuery();
-            conexaosql.Close();
-        }
+       
     }
 }

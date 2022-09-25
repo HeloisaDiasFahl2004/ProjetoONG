@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjetoONG
 {
@@ -16,10 +12,10 @@ namespace ProjetoONG
         public string Cidade { get; set; }
         public string Estado { get; set; }
 
-        public Endereco(string l,string cep,string comp, int num, string b, string c,string est)
+        public Endereco(string l, string cep, string comp, int num, string b, string c, string est)
         {
             this.Logradouro = l;
-            this.CEP = cep;  
+            this.CEP = cep;
             this.Complemento = comp;
             this.Numero = num;
             this.Bairro = b;
@@ -51,9 +47,9 @@ namespace ProjetoONG
             string c = Console.ReadLine();
 
             Console.Write("Estado: ");
-            string est =Console.ReadLine();
+            string est = Console.ReadLine();
 
-            Endereco e = new Endereco(l,cep,comp,num,b,c,est);
+            Endereco e = new Endereco(l, cep, comp, num, b, c, est);
             return e;
         }
     }
