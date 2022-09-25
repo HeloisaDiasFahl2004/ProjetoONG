@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace ProjetoONG
@@ -25,10 +26,16 @@ namespace ProjetoONG
                 BD bd = new BD();
                 SqlConnection conexaosql = new SqlConnection(bd.Caminho());
                 conexaosql.Open();
-                string sql = $"INSERT INTO Adotante(Nome, CPF, Sexo, DataNascimento, EnderecoCompleto, Telefone) VALUES('{adotante.Nome}' ," + $"'{adotante.CPF}' , '{adotante.Sexo}' , '{adotante.DataNascimento}' , '{adotante.Endereco}' , '{adotante.Telefone}');";
-                SqlCommand cmdINSERTadotante = new SqlCommand(sql, conexaosql);
+                string insertAdotante = $"INSERT INTO Adotante(Nome, CPF, Sexo, DataNascimento, Telefone) VALUES('{adotante.Nome}' ," + $"'{adotante.CPF}' , '{adotante.Sexo}' , '{adotante.DataNascimento}'  , '{adotante.Telefone}');";
+                var endereco = adotante.Endereco;
+                string insertEndereco = $"INSERT INTO Endereco (CPF,Logradouro,CEP,Complemento,Numero,Bairro,Cidade,Estado) VALUES ('{adotante.CPF}' ," + $"'{endereco.Logradouro}' , '{endereco.CEP}' , '{endereco.Complemento}','{endereco.Numero}' , '{endereco.Bairro}' , '{endereco.Cidade}', '{endereco.Estado}')";
+                SqlCommand cmdINSERTadotante = new SqlCommand(insertAdotante, conexaosql);
+                SqlCommand cmdINSERTendereco = new SqlCommand(insertEndereco, conexaosql);
                 cmdINSERTadotante.ExecuteNonQuery();
+                cmdINSERTendereco.ExecuteNonQuery();
                 conexaosql.Close();
+                Console.WriteLine("Adotante inserido com sucesso!");
+                Console.ReadKey();
             }
             catch (SqlException e)
             {
@@ -39,14 +46,16 @@ namespace ProjetoONG
                 Console.ReadKey();
 
             }
+
         } // adiciono 1 adotante
         public void VisualizarAdotantes(Adotante adotante)
         {
+
             BD bd = new BD();
             SqlConnection conexaosql = new SqlConnection(bd.Caminho());
             conexaosql.Open();
             SqlCommand cmdSELECTadotante = new SqlCommand();
-            cmdSELECTadotante.CommandText = "SELECT Nome,CPF,Sexo,DataNascimento,EnderecoCompleto,Telefone FROM Adotante";
+            cmdSELECTadotante.CommandText = "SELECT Nome,a.CPF,Sexo,DataNascimento,Telefone,Logradouro,CEP,Complemento,Numero,Bairro,Cidade,Estado FROM Adotante a inner join Endereco e on e.CPF = a.CPF";
             cmdSELECTadotante.Connection = conexaosql;
             using (SqlDataReader sqlReader = cmdSELECTadotante.ExecuteReader())//permite o acesso ao banco de dados
             {
@@ -58,8 +67,16 @@ namespace ProjetoONG
                     Console.Write("{0}\t", sqlReader.GetDateTime(3));
                     Console.Write("{0}\t", sqlReader.GetString(4));
                     Console.Write("{0}\t", sqlReader.GetString(5));
+                    Console.Write("{0}\t", sqlReader.GetString(6));
+                    Console.Write("{0}\t", sqlReader.GetString(7));
+                    Console.Write("{0}\t", sqlReader.GetInt32(8));
+                    Console.Write("{0}\t", sqlReader.GetString(9));
+                    Console.Write("{0}\t", sqlReader.GetString(10));
+                    Console.Write("{0}\t", sqlReader.GetString(11));
+
                 }
             }
+            Console.WriteLine("\nImpressão de Adotantes encerrada!");
             Console.ReadKey();
         } // seleciono todos os adotantes
         public Adotante BuscarAdotante(Adotante adotante)
@@ -70,9 +87,12 @@ namespace ProjetoONG
             SqlCommand cmdSELECTadotante = new SqlCommand();
             Console.Write("Informe o CPF que deseja buscar: ");
             string cpf = Console.ReadLine();
-            cmdSELECTadotante.CommandText = "SELECT Nome,CPF,Sexo,DataNascimento,EnderecoCompleto,Telefone FROM Adotante WHERE cpf=@CPF";
-            cmdSELECTadotante.Parameters.AddWithValue("CPF", cpf);
+
+
+            cmdSELECTadotante.CommandText = "SELECT Nome,a.CPF,Sexo,DataNascimento,Telefone,Logradouro,CEP,Complemento,Numero,Bairro,Cidade,Estado FROM Adotante a  inner join Endereco e on e.CPF = a.CPF WHERE a.CPF=@CPF";
+            cmdSELECTadotante.Parameters.AddWithValue("@CPF", cpf);
             cmdSELECTadotante.Connection = conexaosql;
+
             using (SqlDataReader sqlReader = cmdSELECTadotante.ExecuteReader())
             {
                 while (sqlReader.Read())
@@ -83,9 +103,16 @@ namespace ProjetoONG
                     Console.Write("{0}\t", sqlReader.GetDateTime(3));
                     Console.Write("{0}\t", sqlReader.GetString(4));
                     Console.Write("{0}\t", sqlReader.GetString(5));
+                    Console.Write("{0}\t", sqlReader.GetString(6));
+                    Console.Write("{0}\t", sqlReader.GetString(7));
+                    Console.Write("{0}\t", sqlReader.GetInt32(8));
+                    Console.Write("{0}\t", sqlReader.GetString(9));
+                    Console.Write("{0}\t", sqlReader.GetString(10));
+                    Console.Write("{0}\t", sqlReader.GetString(11));
                 }
             }
-            Console.ReadLine();
+            Console.WriteLine("Busca encerrada!");
+            Console.ReadKey();
             return adotante;
         } // seleciono 1 adotante específico
         public void AtualizarCampoAdotante()
@@ -210,7 +237,7 @@ namespace ProjetoONG
                             SqlCommand cmdUpdateEST = new SqlCommand();
                             cmdUpdateEST.CommandText = "UPDATE Endereco set Estado= @Estado  WHERE cpf=@CPF;";
                             Console.Write("Informe o novo Estado: ");
-                            char EstadoNovo = char.Parse(Console.ReadLine());
+                            string EstadoNovo =Console.ReadLine();
                             cmdUpdateEST.Parameters.AddWithValue("@Estado", EstadoNovo);
                             cmdUpdateEST.Parameters.AddWithValue("@CPF", cpf);
                             cmdUpdateEST.Connection = conexaosql;
@@ -235,20 +262,35 @@ namespace ProjetoONG
                     break;
 
             }
+            Console.WriteLine("Atualização encerrada!");
+            Console.ReadKey();
 
         } // atualizo determinado campo,exceto o CPF(chave primária)
-        public void DeletarAdotante() {
+        public void DeletarAdotante()
+        {
             BD bd = new BD();
             SqlConnection conexaosql = new SqlConnection(bd.Caminho());
             conexaosql.Open();
             Console.Write("Informe o CPF que deseja excluir: ");
             string cpf = Console.ReadLine();
-            SqlCommand cmdDELETE = new SqlCommand();
-            cmdDELETE.CommandText = "DELETE FROM Adotante WHERE cpf=@CPF;";
-            cmdDELETE.Parameters.AddWithValue("@CPF", cpf);
-            cmdDELETE.Connection = conexaosql;
-            cmdDELETE.ExecuteNonQuery();
+
+            SqlCommand cmdDELETEend = new SqlCommand();
+            cmdDELETEend.CommandText = "DELETE FROM Endereco WHERE cpf=@CPF;";
+            cmdDELETEend.Parameters.AddWithValue("@CPF", cpf);
+
+
+            SqlCommand cmdDELETEadocao = new SqlCommand();
+            cmdDELETEadocao.CommandText = "DELETE FROM Adocao WHERE cpf=@CPF;";
+            cmdDELETEadocao.Parameters.AddWithValue("@CPF", cpf);
+
+            SqlCommand cmdDELETEado = new SqlCommand();
+            cmdDELETEado.CommandText = "DELETE FROM Adotante WHERE cpf=@CPF;";
+            cmdDELETEado.Parameters.AddWithValue("@CPF", cpf);
+            cmdDELETEado.Connection = conexaosql;
+            cmdDELETEado.ExecuteNonQuery();
             conexaosql.Close();
+            Console.WriteLine("Adotante excluído com sucesso!");
+            Console.ReadKey();
         } //excluo 1 adotante
         #endregion
 
@@ -262,6 +304,8 @@ namespace ProjetoONG
             SqlCommand cmdINSERTadotado = new SqlCommand(sql, conexaosql);
             cmdINSERTadotado.ExecuteNonQuery();
             conexaosql.Close();
+            Console.WriteLine("Adotado inserido com sucesso!");
+            Console.ReadKey();
         } //adiciono 1 adotado
         public void VisualizarAdotados(Adotado adotado)
         {
@@ -279,10 +323,38 @@ namespace ProjetoONG
                     Console.Write("{0}\t", sqlReader.GetString(1));
                     Console.Write("{0}\t", sqlReader.GetString(2));
                     Console.Write("{0}\t", sqlReader.GetChar(3));
+                    Console.Write("{0}\t", sqlReader.GetString(4));
+                }
+            }
+            Console.WriteLine("Impressão Finalizada!");
+            Console.ReadKey();
+        } // seleciono todos os adotados
+        public Adotado BuscarAdotado(Adotado adotado)
+        {
+            BD bd = new BD();
+            SqlConnection conexaosql = new SqlConnection(bd.Caminho());
+            conexaosql.Open();
+            SqlCommand cmdSELECTadotante = new SqlCommand();
+            Console.Write("Informe o CHIP que deseja buscar: ");
+            string chip = Console.ReadLine();
+            cmdSELECTadotante.CommandText = "SELECT CHIP,Familia,Raca,Sexo,Nome FROM Adotado WHERE chip=@CHIP";
+            cmdSELECTadotante.Parameters.AddWithValue("CHIP", chip);
+            cmdSELECTadotante.Connection = conexaosql;
+            using (SqlDataReader sqlReader = cmdSELECTadotante.ExecuteReader())
+            {
+                while (sqlReader.Read())
+                {
+                    Console.Write("{0}\t", sqlReader.GetInt32(0));
+                    Console.Write("{0}\t", sqlReader.GetString(1));
+                    Console.WriteLine("{0}\t", sqlReader.GetString(2));
+                    Console.Write("{0}\t", sqlReader.GetChar(3));
                     Console.WriteLine("{0}\t", sqlReader.GetString(4));
                 }
             }
-        } // seleciono todos os adotados
+            Console.WriteLine("Busca Finalizada!");
+            Console.ReadKey();
+            return adotado;
+        } // seleciono 1 adotado específico
         public void AtualizarCampoAdotado()
         {
             BD bd = new BD();
@@ -298,7 +370,7 @@ namespace ProjetoONG
                     return;
                 case 1:
                     SqlCommand cmdUpdateN = new SqlCommand();
-                    cmdUpdateN.CommandText = "UPDATE Adotante set Familia = @Familia  WHERE chip=@CHIP;";
+                    cmdUpdateN.CommandText = "UPDATE Adotado set Familia = @Familia  WHERE chip=@CHIP;";
                     Console.Write("Informe a nova Família: ");
                     string f = Console.ReadLine();
                     cmdUpdateN.Parameters.AddWithValue("@Família", f);
@@ -309,7 +381,7 @@ namespace ProjetoONG
                     break;
                 case 2:
                     SqlCommand cmdUpdateS = new SqlCommand();
-                    cmdUpdateS.CommandText = "UPDATE Adotante set Raca = @raca  WHERE chip=@CHIP;";
+                    cmdUpdateS.CommandText = "UPDATE Adotado set Raca = @raca  WHERE chip=@CHIP;";
                     Console.Write("Informe a nova Raça: ");
                     string r = Console.ReadLine();
                     cmdUpdateS.Parameters.AddWithValue("@Raca", r);
@@ -320,7 +392,7 @@ namespace ProjetoONG
                     break;
                 case 3:
                     SqlCommand cmdUpdateSPet = new SqlCommand();
-                    cmdUpdateSPet.CommandText = "UPDATE Adotante set Sexo = @sexo  WHERE cpf=@CPF;";
+                    cmdUpdateSPet.CommandText = "UPDATE Adotado set Sexo = @sexo  WHERE chip=@CHIP;";
                     Console.Write("Informe o novo sexo: ");
                     char sPet = char.Parse(Console.ReadLine());
                     cmdUpdateSPet.Parameters.AddWithValue("@Sexo", sPet);
@@ -331,7 +403,7 @@ namespace ProjetoONG
                     break;
                 case 4:
                     SqlCommand cmdUpdateNPet = new SqlCommand();
-                    cmdUpdateNPet.CommandText = "UPDATE Adotante set Nome = @Nome  WHERE cpf=@CPF;";
+                    cmdUpdateNPet.CommandText = "UPDATE Adotadoset Nome = @Nome  WHERE chip=@CHIP;";
                     Console.Write("Informe o novo nome: ");
                     string nPet = Console.ReadLine();
                     cmdUpdateNPet.Parameters.AddWithValue("@Nome", nPet);
@@ -341,31 +413,9 @@ namespace ProjetoONG
                     conexaosql.Close();
                     break;
             }
+            Console.WriteLine("Atualização realizada com sucesso!");
+            Console.ReadKey();
         }  // atualizo determinado campo, exceto CHIP(chave primária)
-        public Adotado BuscarAdotado(Adotado adotado)
-        {
-            BD bd = new BD();
-            SqlConnection conexaosql = new SqlConnection(bd.Caminho());
-            conexaosql.Open();
-            SqlCommand cmdSELECTadotante = new SqlCommand();
-            Console.Write("Informe o CHIP que deseja buscar: ");
-            string chip = Console.ReadLine();
-            cmdSELECTadotante.CommandText = "SELECT CHIP,Familia,Raca,Sexo,Nome FROM Adotado WHERE cpf=@CPF";
-            cmdSELECTadotante.Connection = conexaosql;
-            using (SqlDataReader sqlReader = cmdSELECTadotante.ExecuteReader())
-            {
-                while (sqlReader.Read())
-                {
-                    Console.Write("{0}\t", sqlReader.GetInt32(0));
-                    Console.Write("{0}\t", sqlReader.GetString(1));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(2));
-                    Console.Write("{0}\t", sqlReader.GetChar(3));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(4));
-
-                }
-            }
-            return adotado;
-        } // seleciono 1 adotado específico
         public void DeletarAdotado()
         {
             BD bd = new BD();
@@ -379,6 +429,8 @@ namespace ProjetoONG
             cmdDELETEP.Connection = conexaosql;
             cmdDELETEP.ExecuteNonQuery();
             conexaosql.Close();
+            Console.WriteLine("Adotado excluído com sucesso");
+            Console.ReadKey();
         } // excluo 1 adotado
         #endregion
 
@@ -415,7 +467,31 @@ namespace ProjetoONG
                 }
             }
             conexaosql.Close();
-        } //SELECT
+        } //SELECT Todas
+        public Adocao BuscarAdocao(Adocao adocao)
+        {
+            BD bd = new BD();
+            SqlConnection conexaosql = new SqlConnection(bd.Caminho());
+            conexaosql.Open();
+            SqlCommand cmdSELECTadocao = new SqlCommand();
+            Console.Write("Informe o CHIP que deseja buscar: ");
+            string chip = Console.ReadLine();
+            cmdSELECTadocao.CommandText = "SELECT CHIP,Familia,Raca,Sexo,Nome FROM Adotado WHERE chip=@CHIP";
+            cmdSELECTadocao.Parameters.AddWithValue("CHIP", chip);
+            cmdSELECTadocao.Connection = conexaosql;
+            using (SqlDataReader sqlReader = cmdSELECTadocao.ExecuteReader())
+            {
+                while (sqlReader.Read())
+                {
+                    Console.Write("{0}\t", sqlReader.GetInt32(0));
+                    Console.Write("{0}\t", sqlReader.GetString(1));
+                    Console.WriteLine("{0}\t", sqlReader.GetString(2));
+                    Console.Write("{0}\t", sqlReader.GetChar(3));
+                    Console.WriteLine("{0}\t", sqlReader.GetString(4));
+                }
+            }
+            return adocao;
+        } //Buscar 1 adoção em específico
 
         #endregion
 

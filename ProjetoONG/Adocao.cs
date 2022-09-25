@@ -21,7 +21,7 @@ namespace ProjetoONG
         }
         public void CadastrarAdocao()
         {
-            Console.Write("Informe o númedo do CPF: ");
+            Console.Write("Informe o número do CPF: ");
             CPF = Console.ReadLine();
 
             Console.Write("Informe o número de identificação do animal: ");

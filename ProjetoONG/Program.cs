@@ -121,7 +121,7 @@ namespace ProjetoONG
 
                 }
             } while (opc != 0);
-        }
+        } //OK
         static void MenuAdotado()
         {
             int opc;
