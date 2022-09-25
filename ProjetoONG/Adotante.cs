@@ -24,7 +24,7 @@ namespace ProjetoONG
             this.Endereco = e;
             this.Telefone = t;
         }
-        public Adotante CadastrarAdotante()
+        public void CadastrarAdotante()
         {
 
             Console.WriteLine(" >>> INICIANDO CADASTRO ADOTANTE <<< ");
@@ -42,15 +42,14 @@ namespace ProjetoONG
             Console.Write("Data Nascimento: ");
             this.DataNascimento = DateTime.Parse(Console.ReadLine());
 
-            //endereço
+           
             Endereco e = new Endereco();
             this.Endereco = e.CadastrarEndereco();
 
             Console.Write("Telefone: ");
             this.Telefone = Console.ReadLine();
 
-            //Adotante adotante = new Adotante(n, cpf, s, dn, e, t);
-            return this;
+          
         }
     }
 }

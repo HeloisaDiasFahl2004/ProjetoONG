@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection.PortableExecutable;
 
 namespace ProjetoONG
 {
@@ -273,7 +274,7 @@ namespace ProjetoONG
             conexaosql.Open();
             Console.Write("Informe o CPF que deseja excluir: ");
             string cpf = Console.ReadLine();
-
+            //antes de excluir o adotante tenho que excluir os demais campos que contém ligação
             SqlCommand cmdDELETEend = new SqlCommand();
             cmdDELETEend.CommandText = "DELETE FROM Endereco WHERE cpf=@CPF;";
             cmdDELETEend.Parameters.AddWithValue("@CPF", cpf);
@@ -322,7 +323,7 @@ namespace ProjetoONG
                     Console.Write("{0}\t", sqlReader.GetInt32(0));
                     Console.Write("{0}\t", sqlReader.GetString(1));
                     Console.Write("{0}\t", sqlReader.GetString(2));
-                    Console.Write("{0}\t", sqlReader.GetChar(3));
+                    Console.Write("{0}\t", sqlReader.GetString(3));
                     Console.Write("{0}\t", sqlReader.GetString(4));
                 }
             }
@@ -423,9 +424,15 @@ namespace ProjetoONG
             conexaosql.Open();
             Console.Write("Informe o CHIP que deseja excluir: ");
             int chip = int.Parse(Console.ReadLine());
+
+            SqlCommand cmdDELETEadocao = new SqlCommand();
+            cmdDELETEadocao.CommandText = "DELETE FROM Adocao WHERE chip=@CHIP;";
+            cmdDELETEadocao.Parameters.AddWithValue("@CHIP", chip);
+
             SqlCommand cmdDELETEP = new SqlCommand();
-            cmdDELETEP.CommandText = "DELETE FROM Contatos WHERE chip=@CHIP;";
+            cmdDELETEP.CommandText = "DELETE FROM Adotados WHERE chip=@CHIP;";
             cmdDELETEP.Parameters.AddWithValue("@CHIP", chip);
+
             cmdDELETEP.Connection = conexaosql;
             cmdDELETEP.ExecuteNonQuery();
             conexaosql.Close();
@@ -453,20 +460,22 @@ namespace ProjetoONG
             conexaosql.Open();
 
             SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = "SELECT CPF, CHIP, DataAdocao FROM Adocao";
+            cmd.CommandText = "SELECT Adotante.CPF, Adotado.CHIP, Adotante.Nome, DataAdocao FROM Adocao inner join Adotante  on Adotante.CPF = Adocao.CPF inner join Adotado  on Adotado.CHIP = Adocao.CHIP;";
+            cmd.Connection = conexaosql;
 
             using (SqlDataReader reader = cmd.ExecuteReader())
             {
 
                 while (reader.Read())
                 {
-                    Console.WriteLine("{0}", reader.GetString(0));
-                    Console.WriteLine("{0}", reader.GetInt32(1));
-                    Console.WriteLine("{0}", reader.GetDateTime(2));
-
+                    Console.Write("{0}", reader.GetString(0));
+                    Console.Write("{0}", reader.GetInt32(1));
+                    Console.Write("{0}", reader.GetString(2));
+                    Console.Write("{0}", reader.GetDateTime(3));
                 }
             }
             conexaosql.Close();
+            Console.ReadKey();
         } //SELECT Todas
         public Adocao BuscarAdocao(Adocao adocao)
         {
@@ -476,18 +485,17 @@ namespace ProjetoONG
             SqlCommand cmdSELECTadocao = new SqlCommand();
             Console.Write("Informe o CHIP que deseja buscar: ");
             string chip = Console.ReadLine();
-            cmdSELECTadocao.CommandText = "SELECT CHIP,Familia,Raca,Sexo,Nome FROM Adotado WHERE chip=@CHIP";
+            cmdSELECTadocao.CommandText = "SELECT Adotante.CPF, Adotado.CHIP, Adotante.Nome, DataAdocao FROM Adocao inner join Adotante on Adotante.CPF = Adocao.CPF inner join Adotado on Adotado.CHIP = Adocao.CHIP;";
             cmdSELECTadocao.Parameters.AddWithValue("CHIP", chip);
             cmdSELECTadocao.Connection = conexaosql;
             using (SqlDataReader sqlReader = cmdSELECTadocao.ExecuteReader())
             {
                 while (sqlReader.Read())
                 {
-                    Console.Write("{0}\t", sqlReader.GetInt32(0));
-                    Console.Write("{0}\t", sqlReader.GetString(1));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(2));
-                    Console.Write("{0}\t", sqlReader.GetChar(3));
-                    Console.WriteLine("{0}\t", sqlReader.GetString(4));
+                    Console.WriteLine("{0}", sqlReader.GetString(0));
+                    Console.WriteLine("{0}", sqlReader.GetInt32(1));
+                    Console.WriteLine("{0}", sqlReader.GetString(2));
+                    Console.WriteLine("{0}", sqlReader.GetDateTime(3));
                 }
             }
             return adocao;

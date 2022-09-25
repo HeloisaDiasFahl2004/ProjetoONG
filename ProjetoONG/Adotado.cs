@@ -24,25 +24,24 @@ namespace ProjetoONG
             this.Sexo = s;
             this.Nome = n;
         }
-        public Adotado CadastrarAdotado()
+        public void CadastrarAdotado()
         {
             Console.WriteLine(" >>> INICIANDO CADASTRO ADOTADO <<< ");
             Thread.Sleep(1000);
 
             Console.Write("Família: ");
-            string f = Console.ReadLine();
+            this.Familia = Console.ReadLine();
 
             Console.Write("Raça: ");
-            string r = Console.ReadLine();
+            this.Raca = Console.ReadLine();
 
             Console.Write("Sexo: (M/F)");
-            char s = char.Parse(Console.ReadLine().ToUpper());
+            this.Sexo = char.Parse(Console.ReadLine().ToUpper());
 
             Console.Write("Nome: ");
-            string n = Console.ReadLine();
+            this.Nome = Console.ReadLine();
 
-            Adotado adotado = new Adotado(f, r, s, n);
-            return adotado;
+;
         }
        
     }
